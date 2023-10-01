@@ -1,0 +1,124 @@
+﻿@model List<Produto>
+@{
+    ViewData["Title"] = "IndexProduto";
+}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+
+<script>
+    $(document).ready(function () {
+        // Exibir a mensagem de sucesso
+        $("#mensagem").fadeIn("slow");
+
+        // Configurar um temporizador para esconder a mensagem após 3 segundos (3000 milissegundos)
+        setTimeout(function () {
+            $("#mensagem").fadeOut("slow");
+        }, 2000);
+    });
+</script>
+
+<h1>Produtos</h1>
+@if (TempData["messageEdit"] != null)
+{
+    <div id="mensagem" class="alert alert-success" style="display: none;">
+        Produto editado com sucesso!
+    </div>
+
+}
+@if (TempData["messageDelete"] != null)
+{
+    <div id="mensagem" class="alert alert-success" style="display: none;">
+        Produto deletado com sucesso!
+    </div>
+
+}
+
+<a asp-action="createProduto" class="btn btn-primary">Cadastrar</a>
+<div class="row mb-3">
+    <div class="col-md-6">
+        <input type="text" id="pesquisa" class="form-control" placeholder="Pesquisar por nome, marca, etc." />
+    </div>
+    <div class="col-md-2">
+        <button id="btnPesquisar" class="btn btn-primary">Pesquisar</button>
+    </div>
+</div>
+<tabela>
+    <thead>
+        <tr>
+            <th>Data de Cadastro</th>
+            <th>Data de Atualização</th>
+            <th>Nome</th>
+            <th>Marca</th>
+            <th>Preço</th>
+            <th>Tipo de Material</th>
+            <th>Impacto</th>
+            <th>Importancia</th>
+            <th>Ativo</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var entidade in Model)
+        {
+            <tr>
+                <td>@entidade.Cadastro.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                <td>@entidade.Atualizacao.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                <td>@entidade.Nome</td>
+                <td>@entidade.Marca</td>
+                <td>@entidade.Preco</td>
+                <td>@entidade.MaterialTipoId</td>
+                <td>@entidade.Impacto</td>
+                <td>@entidade.Importancia</td>
+                <td>@(entidade.Ativo? "Sim" : "Não")</td>
+                <td>
+                    <a asp-action="editProduto" asp-route-id="@entidade.Id" class="btn btn-primary">Editar</a>
+                    <button onclick="produto.value = @entidade.Id" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmacao">Excluir</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</tabela>
+<div class="modal fade" id="confirmacao" tabindex="-1" aria-labelledby="confirmacaoLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="confirmacaoLabel">Confirmação</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Tem certeza que deseja excluir o Produto?
+            </div>
+            <div class="modal-footer">
+                <form asp-action="deleteProduto">
+                    <input type="hidden" name="id" id="produto" />
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
+                    <button type="submit" class="btn btn-danger">Sim</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        // Adiciona um evento de clique ao botão de pesquisa
+        $("#btnPesquisar").click(function () {
+            var termoPesquisa = $("#pesquisa").val().toLowerCase();
+            $("table tbody tr").each(function () {
+                var linha = $(this);
+                var encontrado = false;
+                linha.find("td").each(function () {
+                    var coluna = $(this).text().toLowerCase();
+                    if (coluna.indexOf(termoPesquisa) > -1) {
+                        encontrado = true;
+                        return false; // Saia do loop interno (colunas)
+                    }
+                });
+                if (encontrado) {
+                    linha.show();
+                } else {
+                    linha.hide();
+                }
+            });
+        });
+    });
+</script>

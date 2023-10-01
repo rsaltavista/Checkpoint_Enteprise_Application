@@ -1,0 +1,79 @@
+﻿@using MercadoEletro.Enums;
+@model MaterialTipo
+@{
+    ViewData["Title"] = "CreateMaterialTipo";
+}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Função para atualizar o dropdown de tipo de material
+        function atualizarDropdownTiposMateriais() {
+            $.ajax({
+                url: '@Url.Action("ObterTiposMateriais", "MaterialTipo")',
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    var dropdown = $('#MaterialTipoId');
+                    dropdown.empty();
+                    dropdown.append('<option value="">Selecione</option>');
+                    $.each(data, function () {
+                        dropdown.append($('<option></option>').attr('value', this.Id).text(this.Descricao));
+                    });
+                },
+                error: function () {
+                    console.error('Erro ao obter tipos de materiais.');
+                }
+            });
+        }
+
+        // Evento de clique no botão de cadastro de material
+        $("#btnCadastrarMaterial").click(function () {
+            var descricaoMaterial = $("#Descricao").val();
+            $.ajax({
+                url: '@Url.Action("CreateMaterialTipo", "MaterialTipo")',
+                type: 'POST',
+                data: { Descricao: descricaoMaterial },
+                success: function () {
+                    // Limpa o campo de descrição após o cadastro
+                    $("#Descricao").val("");
+                    // Atualiza o dropdown de tipos de materiais
+                    atualizarDropdownTiposMateriais();
+                },
+                error: function () {
+                    console.error('Erro ao cadastrar tipo de material.');
+                }
+            });
+        });
+        
+
+        // Atualize o dropdown de tipos de materiais ao carregar a página
+        atualizarDropdownTiposMateriais();
+
+        $(document).ready(function () {
+            // Exibir a mensagem de sucesso
+            $("#mensagem").fadeIn("slow");
+
+            // Configurar um temporizador para esconder a mensagem após 3 segundos (3000 milissegundos)
+            setTimeout(function () {
+                $("#mensagem").fadeOut("slow");
+            }, 2000);
+        });
+    });
+</script>
+
+<h1>Cadastrar</h1>
+
+@if (TempData["messageCreateMaterial"] != null)
+{
+    <div id="mensagem" class="alert alert-success" style="display: none;">
+        Tipo de Material cadastrado com sucesso!
+    </div>
+
+}
+
+<a asp-action="indexMaterialTipo" class="btn btn-primary">Tipos de Material</a>
+<form asp-action="createMaterialTipo">
+            <label asp-for="Descricao"></label>
+            <input asp-for="Descricao" class="form-control" />
+    <botao></botao>
+</form>

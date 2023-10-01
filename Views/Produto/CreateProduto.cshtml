@@ -1,0 +1,114 @@
+﻿@using MercadoEletro.Enums;
+@model Produto
+@{
+    ViewData["Title"] = "CreateProduto";
+}
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/MercadoEletro.styles.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/images/FIAP-WHITE-1.png" asp-append-version="true"/>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        // Chamada AJAX para obter tipos de materiais
+        $.ajax({
+            url: '/MaterialTipo/ObterTiposMateriais',
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                var dropdown = $('#MaterialTipoId'); // Note que estamos usando MaterialTipoId, que corresponde à propriedade MaterialTipoId em Produto
+                dropdown.empty();
+                dropdown.append('<option value="">Selecione</option>');
+                $.each(data, function () {
+                    dropdown.append($('<option></option>').attr('value', this.id).text(this.descricao));
+                });
+            },
+            error: function () {
+                console.error('Erro ao obter tipos de materiais.');
+            }
+        });
+        var btn = $("#btnCadastro");
+        btn.click(function(e){
+            if($("#Nome").val() == ""){
+                alert("preencha o campo nome!");
+                e.preventDefault();
+            }
+        })
+    });
+
+    $(document).ready(function () {
+        // Exibir a mensagem de sucesso
+        $("#mensagem").fadeIn("slow");
+
+        // Configurar um temporizador para esconder a mensagem após 3 segundos (3000 milissegundos)
+        setTimeout(function () {
+            $("#mensagem").fadeOut("slow");
+        }, 2000);
+    });
+
+</script>
+
+
+<h1>Cadastrar</h1>
+
+@if (TempData["messageCreate"] != null)
+{
+    <div id="mensagem" class="alert alert-success" style="display: none;">
+        Produto cadastrado com sucesso!
+    </div>
+
+}
+
+
+<a asp-action="indexProduto" class="btn btn-primary">Produtos</a>
+<form asp-action="createProduto">
+    <input asp-for="Cadastro" hidden/>
+    <input asp-for="Atualizacao" hidden/>
+    <div class="row">
+        <div class="col">
+            <label asp-for="Nome"></label>
+            <input asp-for="Nome" class="form-control" />
+        </div>
+        <div class="col">
+            <label asp-for="Marca"></label>
+            <input asp-for="Marca" class="form-control" />
+        </div>
+    </div>
+    <div class="row">
+    </div>
+    <div class="row">
+        <div class="col">
+            <label asp-for="Preco"></label>
+            <input asp-for="Preco" class="form-control" />
+        </div>
+        <div class="col">
+            <label asp-for="MaterialTipo"></label>
+            <select asp-for="MaterialTipoId" asp-items="@ViewBag.materiais" class="form-select">
+                <option>Selecione</option>
+            </select>
+
+        </div>
+    </div>
+           
+    <div class="row">
+        <div class="col">
+            <label asp-for="Importancia"></label>
+            <select asp-for="Importancia" asp-items="@Html.GetEnumSelectList<ImportanciaEnum>()" class="form-select">
+                <option>Selecione</option>
+            </select>
+        </div>
+        <div class="col">
+            <label asp-for="Impacto"></label>
+            <select asp-for="Impacto" asp-items="@Html.GetEnumSelectList<ImpactoEnum>()" class="form-select">
+                <option>Selecione</option>
+            </select>
+        </div>
+    </div>
+    <div class="mb-3">
+        <input asp-for="Ativo" class="form-check"/>
+        <label asp-for="Ativo"></label>
+    </div>
+
+    <botao id="btnCadastro"></botao>
+</form>

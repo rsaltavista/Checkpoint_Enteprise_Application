@@ -1,0 +1,112 @@
+﻿@model List<MaterialTipo>
+@{
+    ViewData["Title"] = "IndexMaterialTipo";
+}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+
+<script>
+    $(document).ready(function () {
+        // Exibir a mensagem de sucesso
+        $("#mensagem").fadeIn("slow");
+
+        // Configurar um temporizador para esconder a mensagem após 3 segundos (3000 milissegundos)
+        setTimeout(function () {
+            $("#mensagem").fadeOut("slow");
+        }, 2000);
+    });
+</script>
+
+
+
+
+<h1>Tipos de Material</h1>
+
+@if (TempData["messageEditMaterial"] != null)
+{
+    <div id="mensagem" class="alert alert-success" style="display: none;">
+        Tipo de Material editado com sucesso!
+    </div>
+
+}
+@if (TempData["messageDeleteMaterial"] != null)
+{
+    <div id="mensagem" class="alert alert-success" style="display: none;">
+        Tipo de Material deletado com sucesso!
+    </div>
+
+}
+
+<a asp-action="createMaterialTipo" class="btn btn-primary">Cadastrar</a>
+<div class="row mb-3">
+    <div class="col-md-6">
+        <input type="text" id="pesquisa" class="form-control" placeholder="Pesquisar pelo tipo de material" />
+    </div>
+    <div class="col-md-2">
+        <button id="btnPesquisar" class="btn btn-primary">Pesquisar</button>
+    </div>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Descrição</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var entidade in Model)
+        {
+            <tr>
+                <td>@entidade.Descricao</td>
+                <td>
+                    <a asp-action="editMaterialTipo" asp-route-id="@entidade.Id" class="btn btn-primary">Editar</a>
+                    <button onclick="materialTipo.value = @entidade.Id" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmacao">Excluir</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div class="modal fade" id="confirmacao" tabindex="-1" aria-labelledby="confirmacaoLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="confirmacaoLabel">Confirmação</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Tem certeza que deseja excluir o Tipo de Material?
+            </div>
+            <div class="modal-footer">
+                <form asp-action="deleteMaterialTipo">
+                    <input type="hidden" name="id" id="materialTipo" />
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
+                    <button type="submit" class="btn btn-danger">Sim</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        // Adiciona um evento de clique ao botão de pesquisa
+        $("#btnPesquisar").click(function () {
+            var termoPesquisa = $("#pesquisa").val().toLowerCase();
+            $("table tbody tr").each(function () {
+                var linha = $(this);
+                var encontrado = false;
+                linha.find("td").each(function () {
+                    var coluna = $(this).text().toLowerCase();
+                    if (coluna.indexOf(termoPesquisa) > -1) {
+                        encontrado = true;
+                        return false; // Saia do loop interno (colunas)
+                    }
+                });
+                if (encontrado) {
+                    linha.show();
+                } else {
+                    linha.hide();
+                }
+            });
+        });
+    });
+</script>
