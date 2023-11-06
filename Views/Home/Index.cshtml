@@ -1,28 +1,9 @@
-﻿﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿<div class="text-center">
+    <h1>Bem-vindo ao Blog</h1>
+    <p>Selecione uma das opções abaixo:</p>
+</div>
 
 <div class="text-center">
-    <h1>Mercado Eletro</h1>
-</div>
-<div class="row">
-    <div class="col">
-        <div class="card">
-            <div class="card-body">
-                <h3 class="card-title">Cadastro de Produto</h3>
-                <p class="card-text">Deseja cadastrar Produtos?</p>
-                <a asp-action="CreateProduto" asp-controller="Produto" class="cp btn btn-primary">Cadastrar</a>
-            </div>
-        </div>
-    </div>
-    <div class="col">
-        <div class="card">
-            <div class="card-body">
-                <h3 class="card-title">Cadastro de Tipo de Material</h3>
-                <p class="card-text">Deseja cadastrar Tipos de Materiais?</p>
-                <a asp-action="CreateMaterialTipo" asp-controller="MaterialTipo" class="cm btn btn-primary">Cadastrar</a>
-            </div>
-        </div>
-    </div>
-    
+    <a class="btn btn-primary btn-lg" href="@Url.Action("Index", "Post")">Listar Posts</a>
+    <a class="btn btn-primary btn-lg" href="@Url.Action("Create", "Post")">Criar Post</a>
 </div>

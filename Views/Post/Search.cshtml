@@ -1,0 +1,113 @@
+﻿@model List<CheckpointBlog.Models.Post>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+
+<script>
+    $(document).ready(function () {
+        $("#mensagem").fadeIn("slow");
+
+        setTimeout(function () {
+            $("#mensagem").fadeOut("slow");
+        }, 2000);
+    });
+</script>
+
+<h1>Resultados da Pesquisa</h1>
+
+@if (TempData["messageEdit"] != null)
+{
+    <div id="mensagem" class="alert alert-success" style="display: none;">
+        Post editado com sucesso!
+    </div>
+
+}
+@if (TempData["messageDelete"] != null)
+{
+    <div id="mensagem" class="alert alert-success" style="display: none;">
+        Post deletado com sucesso!
+    </div>
+
+}
+
+@if (Model.Count > 0)
+{
+    <p>Foram encontrados @Model.Count post(s) que correspondem à pesquisa:</p>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Título</th>
+                <th>Data de Publicação</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var post in Model)
+            {
+                <tr>
+                    <td>@post.Titulo</td>
+                    <td>@post.DataPublicacao</td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@post.Id">Detalhes</a> |
+                        <a asp-action="Edit" class="btn btn-primary" asp-route-id="@post.Id">Editar</a> |
+                        <button onclick="post.value = @post.Id" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmacao">Excluir</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="modal fade" id="confirmacao" tabindex="-1" aria-labelledby="confirmacaoLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="confirmacaoLabel">Confirmação</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Tem certeza que deseja excluir o Post?
+                </div>
+                <div class="modal-footer">
+                    <form asp-action="Delete">
+                        <input type="hidden" name="id" id="post" />
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
+                        <button type="submit" class="btn btn-danger">Sim</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+else
+{
+    <p>Nenhum post corresponde à pesquisa.</p>
+}
+<script>
+    $(document).ready(function () {
+        // Adiciona um evento de clique ao botão de pesquisa
+        $("#btnPesquisar").click(function () {
+            var termoPesquisa = $("#pesquisa").val().toLowerCase();
+            $("table tbody tr").each(function () {
+                var linha = $(this);
+                var encontrado = false;
+                linha.find("td").each(function () {
+                    var coluna = $(this).text().toLowerCase();
+                    if (coluna.indexOf(termoPesquisa) > -1) {
+                        encontrado = true;
+                        return false; // Saia do loop interno (colunas)
+                    }
+                });
+                if (encontrado) {
+                    linha.show();
+                } else {
+                    linha.hide();
+                }
+            });
+        });
+    });
+</script>

@@ -1,4 +1,4 @@
-namespace MercadoEletro.Models
+namespace CheckpointBlog.Models
 {
     public class ErrorViewModel
     {

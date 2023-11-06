@@ -1,0 +1,12 @@
+﻿@model CheckpointBlog.Models.Post
+
+<h1>Confirmação de Exclusão</h1>
+
+<p>Você tem certeza de que deseja excluir este post?</p>
+
+<form asp-action="Delete" asp-route-id="@Model.Id">
+    <div class="form-group">
+        <input type="submit" value="Excluir" class="btn btn-danger" />
+        <a asp-action="Index">Cancelar</a>
+    </div>
+</form>

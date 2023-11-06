@@ -1,8 +1,8 @@
-﻿using MercadoEletro.Models;
+﻿using CheckpointBlog.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
-namespace MercadoEletro.Controllers
+namespace CheckpointBlog.Controllers
 {
     public class HomeController : Controller
     {

@@ -1,83 +1,63 @@
-﻿@model List<Produto>
+﻿@model List<CheckpointBlog.Models.Post>
 @{
-    ViewData["Title"] = "IndexProduto";
+    ViewData["Title"] = "Index";
 }
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 
 
 <script>
     $(document).ready(function () {
-        // Exibir a mensagem de sucesso
         $("#mensagem").fadeIn("slow");
 
-        // Configurar um temporizador para esconder a mensagem após 3 segundos (3000 milissegundos)
         setTimeout(function () {
             $("#mensagem").fadeOut("slow");
         }, 2000);
     });
 </script>
 
-<h1>Produtos</h1>
+<h1>Lista de Posts</h1>
 @if (TempData["messageEdit"] != null)
 {
     <div id="mensagem" class="alert alert-success" style="display: none;">
-        Produto editado com sucesso!
+        Post editado com sucesso!
     </div>
 
 }
 @if (TempData["messageDelete"] != null)
 {
     <div id="mensagem" class="alert alert-success" style="display: none;">
-        Produto deletado com sucesso!
+        Post deletado com sucesso!
     </div>
 
 }
 
-<a asp-action="createProduto" class="btn btn-primary">Cadastrar</a>
-<div class="row mb-3">
-    <div class="col-md-6">
-        <input type="text" id="pesquisa" class="form-control" placeholder="Pesquisar por nome, marca, etc." />
-    </div>
-    <div class="col-md-2">
-        <button id="btnPesquisar" class="btn btn-primary">Pesquisar</button>
-    </div>
-</div>
-<tabela>
+<table class="table">
     <thead>
         <tr>
-            <th>Data de Cadastro</th>
-            <th>Data de Atualização</th>
-            <th>Nome</th>
-            <th>Marca</th>
-            <th>Preço</th>
-            <th>Tipo de Material</th>
-            <th>Impacto</th>
-            <th>Importancia</th>
-            <th>Ativo</th>
+            <th>Título</th>
+            <th>Data de Publicação</th>
+            <th>Comentários</th>
+            <th>Ações</th>
         </tr>
     </thead>
     <tbody>
-        @foreach(var entidade in Model)
+        @foreach (var post in Model)
         {
             <tr>
-                <td>@entidade.Cadastro.ToString("yyyy-MM-dd HH:mm:ss")</td>
-                <td>@entidade.Atualizacao.ToString("yyyy-MM-dd HH:mm:ss")</td>
-                <td>@entidade.Nome</td>
-                <td>@entidade.Marca</td>
-                <td>@entidade.Preco</td>
-                <td>@entidade.MaterialTipoId</td>
-                <td>@entidade.Impacto</td>
-                <td>@entidade.Importancia</td>
-                <td>@(entidade.Ativo? "Sim" : "Não")</td>
+                <td>@post.Titulo</td>
+                <td>@post.DataPublicacao</td>
+                <td>@post.Comentarios.Count</td>
                 <td>
-                    <a asp-action="editProduto" asp-route-id="@entidade.Id" class="btn btn-primary">Editar</a>
-                    <button onclick="produto.value = @entidade.Id" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmacao">Excluir</button>
+                    <a asp-action="Details" asp-route-id="@post.Id">Detalhes</a> |
+                    <a asp-action="Edit" class="btn btn-primary" asp-route-id="@post.Id">Editar</a> |
+                    <button onclick="post.value = @post.Id" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmacao">Excluir</button>
                 </td>
             </tr>
         }
     </tbody>
-</tabela>
+</table>
 <div class="modal fade" id="confirmacao" tabindex="-1" aria-labelledby="confirmacaoLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -86,11 +66,11 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                Tem certeza que deseja excluir o Produto?
+                Tem certeza que deseja excluir o Post?
             </div>
             <div class="modal-footer">
-                <form asp-action="deleteProduto">
-                    <input type="hidden" name="id" id="produto" />
+                <form asp-action="Delete">
+                    <input type="hidden" name="id" id="post" />
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
                     <button type="submit" class="btn btn-danger">Sim</button>
                 </form>
@@ -98,6 +78,7 @@
         </div>
     </div>
 </div>
+
 <script>
     $(document).ready(function () {
         // Adiciona um evento de clique ao botão de pesquisa

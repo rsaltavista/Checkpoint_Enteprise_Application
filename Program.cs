@@ -1,7 +1,16 @@
+using CheckpointBlog.DataBase;
+using Microsoft.EntityFrameworkCore;
+using System.Runtime.Serialization;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+//Recuperar a string de conexao do arquivo appsettings.json
+var conn = builder.Configuration.GetConnectionString("connection");
+
+//Configurar o serviço de injeção de dependência do DbContext
+builder.Services.AddDbContext<Context>(op => op.UseSqlServer(conn));
 
 var app = builder.Build();
 

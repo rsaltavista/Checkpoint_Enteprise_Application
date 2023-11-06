@@ -1,0 +1,43 @@
+﻿@model CheckpointBlog.Models.Post
+
+<h1>Detalhes do Post</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Título do Post</th>
+            <th>Data de Publicação</th>
+            <th>Conteúdo</th>
+        </tr>
+    </thead>
+    <tbody>
+            <tr>
+                <td>@Model.Titulo</td>
+                <td>@Model.DataPublicacao.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                <td>@Model.Conteudo</td>
+            </tr>
+    </tbody>
+</table>
+
+<h2>Comentários</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Autor</th>
+            <th>Data de Comentário</th>
+            <th>Conteúdo do Comentário</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var comentario in Model.Comentarios)
+        {
+            <tr>
+                <td>@comentario.NomeAutor</td>
+                <td>@comentario.DataComentario.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                <td>@comentario.Conteudo</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Create" asp-controller="Comentario" class="btn btn-primary" asp-route-postId="@Model.Id">Adicionar Comentário</a>

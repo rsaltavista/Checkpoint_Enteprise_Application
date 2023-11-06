@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Razor.TagHelpers;
 
-namespace MercadoEletro.TagHelpers
+namespace CheckpointBlog.TagHelpers
 {
     public class Tabela : TagHelper
     {
